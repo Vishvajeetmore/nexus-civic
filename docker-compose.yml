@@ -1,0 +1,296 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: nexus-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval \"db.adminCommand('ping').ok\" | grep 1 >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  guardian-net:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/guardian-net"
+    env_file:
+      - .env
+    environment:
+      - PORT=3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3001/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  pulse-report:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/pulse-report"
+    env_file:
+      - .env
+    environment:
+      - PORT=3002
+    ports:
+      - "3002:3002"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3002/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  civic-pulse:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/civic-pulse"
+    env_file:
+      - .env
+    environment:
+      - PORT=3003
+    ports:
+      - "3003:3003"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3003/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  gig-forge:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/gig-forge"
+    env_file:
+      - .env
+    environment:
+      - PORT=3004
+    ports:
+      - "3004:3004"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3004/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  near-give:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/near-give"
+    env_file:
+      - .env
+    environment:
+      - PORT=3005
+    ports:
+      - "3005:3005"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3005/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  ledger-civic:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/ledger-civic"
+    env_file:
+      - .env
+    environment:
+      - PORT=3006
+    ports:
+      - "3006:3006"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3006/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  mesh-alert:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/mesh-alert"
+    env_file:
+      - .env
+    environment:
+      - PORT=3007
+    ports:
+      - "3007:3007"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3007/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  sentinel-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/sentinel-ai"
+    env_file:
+      - .env
+    environment:
+      - PORT=3008
+    ports:
+      - "3008:3008"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3008/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  terra-scan:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/terra-scan"
+    env_file:
+      - .env
+    environment:
+      - PORT=3009
+    ports:
+      - "3009:3009"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3009/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  voice-assembly:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "voice-assembly"
+    env_file:
+      - .env
+    environment:
+      - PORT=3010
+    ports:
+      - "3010:3010"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3010/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  aura-assist:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/aura-assist"
+    env_file:
+      - .env
+    environment:
+      - PORT=3011
+    ports:
+      - "3011:3011"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3011/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        WORKSPACE_NAME: "@nexus-civic/web"
+    env_file:
+      - .env
+    environment:
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  mongodb_data:

@@ -1,0 +1,22 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package.json package-lock.json turbo.json ./
+COPY tsconfig.json tsconfig.seed.json ./
+COPY apps ./apps
+COPY packages ./packages
+COPY services ./services
+
+RUN npm ci
+
+ARG WORKSPACE_NAME
+ENV WORKSPACE_NAME=${WORKSPACE_NAME}
+
+# Build shared internal packages first so service runtime imports resolve to dist outputs.
+RUN npm run build --workspace=@nexus-civic/shared-types
+RUN npm run build --workspace=@nexus-civic/db
+RUN npm run build --workspace=@nexus-civic/gemini-client
+RUN npm run build --workspace=${WORKSPACE_NAME}
+
+CMD ["sh", "-c", "npm run start --workspace=${WORKSPACE_NAME}"]

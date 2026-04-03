@@ -1,0 +1,86 @@
+version: "3.9"
+
+services:
+  guardian-net:
+    command: npm run dev
+    volumes:
+      - ./services/guardian-net/src:/app/src
+    healthcheck:
+      disable: true
+
+  pulse-report:
+    command: npm run dev
+    volumes:
+      - ./services/pulse-report/src:/app/src
+    healthcheck:
+      disable: true
+
+  civic-pulse:
+    command: npm run dev
+    volumes:
+      - ./services/civic-pulse/src:/app/src
+    healthcheck:
+      disable: true
+
+  gig-forge:
+    command: npm run dev
+    volumes:
+      - ./services/gig-forge/src:/app/src
+    healthcheck:
+      disable: true
+
+  near-give:
+    command: npm run dev
+    volumes:
+      - ./services/near-give/src:/app/src
+    healthcheck:
+      disable: true
+
+  ledger-civic:
+    command: npm run dev
+    volumes:
+      - ./services/ledger-civic/src:/app/src
+    healthcheck:
+      disable: true
+
+  mesh-alert:
+    command: npm run dev
+    volumes:
+      - ./services/mesh-alert/src:/app/src
+    healthcheck:
+      disable: true
+
+  sentinel-ai:
+    command: npm run dev
+    volumes:
+      - ./services/sentinel-ai/src:/app/src
+    healthcheck:
+      disable: true
+
+  terra-scan:
+    command: npm run dev
+    volumes:
+      - ./services/terra-scan/src:/app/src
+    healthcheck:
+      disable: true
+
+  voice-assembly:
+    command: npm run dev
+    volumes:
+      - ./services/voice-assembly/src:/app/src
+    healthcheck:
+      disable: true
+
+  aura-assist:
+    command: npm run dev
+    volumes:
+      - ./services/aura-assist/src:/app/src
+    healthcheck:
+      disable: true
+
+  web:
+    command: npm run dev
+    volumes:
+      - ./apps/web/src:/app/src
+    healthcheck:
+      disable: true

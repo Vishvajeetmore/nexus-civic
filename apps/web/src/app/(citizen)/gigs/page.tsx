@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Briefcase, User, Search, PlusCircle, CheckCircle, AlertTriangle, Star, Clock, MapPin, SearchCheck } from 'lucide-react';
+import { Briefcase, User, Search, PlusCircle, CheckCircle, AlertTriangle, Star, Clock, MapPin, SearchCheck, Shield } from 'lucide-react';
 import axios from 'axios';
 
 const SKILLS = [
