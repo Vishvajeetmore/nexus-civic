@@ -8,6 +8,7 @@ export const createGrievanceSchema = z.object({
   category: z.string().refine((category) => GRIEVANCE_CATEGORIES.includes(category), {
     message: 'Unsupported grievance category',
   }),
+  district: z.string().trim().min(2),
   location: z.object({
     lat: z.number(),
     lng: z.number(),

@@ -1,11 +1,11 @@
 import { Router } from 'express';
 
 import {
-  createGrievance,
-  getGrievanceById,
+  getGrievance,
   listGrievances,
-  updateGrievanceStatus,
-  uploadGrievanceMedia,
+  submitGrievance,
+  updateStatus,
+  uploadMedia,
 } from '../controllers/grievance.controller';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { authenticate, authorize, optionalAuth } from '../middleware/auth';
@@ -15,25 +15,25 @@ import { createGrievanceSchema, updateGrievanceStatusSchema } from '../validator
 
 const router = Router();
 
-router.post('/api/grievances', optionalAuth, validate(createGrievanceSchema), asyncHandler(createGrievance));
+router.post('/api/grievances', optionalAuth, validate(createGrievanceSchema), asyncHandler(submitGrievance));
 
-router.get('/api/grievances', authenticate, authorize(['admin', 'officer']), asyncHandler(listGrievances));
+router.get('/api/grievances', authenticate, asyncHandler(listGrievances));
 
-router.get('/api/grievances/:id', authenticate, asyncHandler(getGrievanceById));
+router.get('/api/grievances/:id', authenticate, asyncHandler(getGrievance));
 
 router.patch(
   '/api/grievances/:id/status',
   authenticate,
   authorize(['admin', 'officer']),
   validate(updateGrievanceStatusSchema),
-  asyncHandler(updateGrievanceStatus)
+  asyncHandler(updateStatus)
 );
 
 router.post(
   '/api/grievances/:id/media',
   optionalAuth,
   uploadMiddleware,
-  asyncHandler(uploadGrievanceMedia)
+  asyncHandler(uploadMedia)
 );
 
 export default router;

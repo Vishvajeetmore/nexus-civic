@@ -12,6 +12,7 @@ const GrievanceSchema = new Schema<IGrievanceDocument>(
     title: { type: String, required: true },
     description: { type: String, required: true },
     category: { type: String, required: true },
+    district: { type: String, required: true, lowercase: true, trim: true },
     location: {
       lat: { type: Number, required: true },
       lng: { type: Number, required: true },
@@ -49,6 +50,7 @@ const GrievanceSchema = new Schema<IGrievanceDocument>(
 
 GrievanceSchema.index({ 'location.lng': '2dsphere', 'location.lat': '2dsphere' });
 GrievanceSchema.index({ category: 1, status: 1, createdAt: 1 });
+GrievanceSchema.index({ category: 1, district: 1, createdAt: 1 });
 
 GrievanceSchema.pre('save', function (next) {
   if (this.isModified('status')) {

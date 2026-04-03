@@ -26,6 +26,27 @@ cp .env.example .env
 docker compose up
 ```
 
+## PulseReport API Notes
+
+### POST /api/grievances
+
+Request body requires `district`.
+
+```json
+{
+	"title": "Water Leakage Near Main Road",
+	"description": "Continuous pipeline leakage for 2 days causing waterlogging.",
+	"category": "water",
+	"district": "jabalpur",
+	"location": {
+		"lat": 23.1815,
+		"lng": 79.9864,
+		"accuracy": 12,
+		"address": "Main Road, Jabalpur"
+	}
+}
+```
+
 ## For Teammates
 
 See `TEAMMATE_SETUP.md` for full local development and contributor onboarding instructions.

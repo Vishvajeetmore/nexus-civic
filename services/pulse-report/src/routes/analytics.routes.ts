@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
 import {
-  getAnalyticsSla,
-  getAnalyticsSummary,
-  getAnalyticsTrends,
+  getSLAReport,
+  getSummary,
+  getTrends,
 } from '../controllers/analytics.controller';
 import { asyncHandler } from '../middleware/asyncHandler';
 import { authenticate, authorize } from '../middleware/auth';
@@ -14,16 +14,16 @@ router.get(
   '/api/analytics/summary',
   authenticate,
   authorize(['admin', 'officer']),
-  asyncHandler(getAnalyticsSummary)
+  asyncHandler(getSummary)
 );
 
 router.get(
   '/api/analytics/trends',
   authenticate,
   authorize(['admin', 'officer']),
-  asyncHandler(getAnalyticsTrends)
+  asyncHandler(getTrends)
 );
 
-router.get('/api/analytics/sla', authenticate, authorize(['admin', 'officer']), asyncHandler(getAnalyticsSla));
+router.get('/api/analytics/sla', authenticate, authorize(['admin', 'officer']), asyncHandler(getSLAReport));
 
 export default router;

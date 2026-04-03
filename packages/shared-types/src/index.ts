@@ -102,6 +102,8 @@ export interface IGrievance {
   description: string;
   /** Category assigned to the grievance. */
   category: string;
+  /** Administrative district of the grievance location. */
+  district: string;
   /** Geolocation associated with the grievance. */
   location: ILocation;
   /** Identifier of the citizen/user who filed the grievance. */

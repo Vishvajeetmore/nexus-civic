@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 type JwtPayload = {
   id: string;
   role: string;
+  departmentId?: string;
 };
 
 declare global {
@@ -12,6 +13,7 @@ declare global {
       user?: {
         id: string;
         role: string;
+        departmentId?: string;
       };
     }
   }
@@ -50,6 +52,7 @@ function extractUserFromAuthHeader(req: Request): JwtPayload | null {
   return {
     id: decoded.id,
     role: decoded.role,
+    departmentId: typeof decoded.departmentId === 'string' ? decoded.departmentId : undefined,
   };
 }
 
