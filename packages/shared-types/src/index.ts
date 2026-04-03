@@ -1,0 +1,472 @@
+// --- Enums ------------------------------------------------------
+
+/** Severity scale 1-5 used across all modules */
+export enum Severity {
+  LOW = 1,
+  MEDIUM = 2,
+  HIGH = 3,
+  VERY_HIGH = 4,
+  CRITICAL = 5,
+}
+
+/** Priority labels derived from priority score */
+export enum Priority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
+/** User roles across the platform */
+export enum UserRole {
+  CITIZEN = 'citizen',
+  OFFICER = 'officer',
+  ADMIN = 'admin',
+  NGO = 'ngo',
+}
+
+// --- Shared -----------------------------------------------------
+
+export interface ILocation {
+  /** Latitude in decimal degrees. */
+  lat: number;
+  /** Longitude in decimal degrees. */
+  lng: number;
+  /** Optional GPS accuracy in meters. */
+  accuracy?: number;
+  /** Optional human-readable address. */
+  address?: string;
+  /** Optional S2 cell identifier for geospatial indexing. */
+  s2CellId?: string;
+}
+
+export interface IPagination {
+  /** Current page number (1-based). */
+  page: number;
+  /** Number of records returned per page. */
+  limit: number;
+  /** Total number of records available. */
+  total: number;
+  /** Total number of pages available. */
+  pages: number;
+}
+
+// --- GuardianNet ------------------------------------------------
+
+export interface ISOSEvent {
+  /** Optional unique identifier for the SOS event record. */
+  _id?: string;
+  /** Trigger source for the SOS event. */
+  type: 'hardware' | 'voice' | 'tap';
+  /** Geolocation where the SOS event was triggered. */
+  location: ILocation;
+  /** Identifier of the user who triggered the SOS event. */
+  userId: string;
+  /** Optional device identifier that originated the SOS event. */
+  deviceId?: string;
+  /** Severity level of the SOS event. */
+  severity: Severity;
+  /** Current response lifecycle status. */
+  status: 'ACTIVE' | 'RESPONDING' | 'RESOLVED';
+  /** Optional timestamp when the event was resolved. */
+  resolvedAt?: Date;
+  /** Optional identifier of the responder who resolved the event. */
+  resolvedBy?: string;
+  /** Optional Superplane execution run identifier. */
+  superplaneRunId?: string;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- PulseReport ------------------------------------------------
+
+export interface IGrievanceStatusHistory {
+  /** Status value recorded at this history step. */
+  status: string;
+  /** Timestamp when this status change was recorded. */
+  timestamp: Date;
+  /** Optional note attached to the status change. */
+  note?: string;
+  /** Optional identifier of the actor that changed status. */
+  changedBy?: string;
+}
+
+export interface IGrievance {
+  /** Optional unique identifier for the grievance record. */
+  _id?: string;
+  /** Public ticket identifier for grievance tracking. */
+  ticketId: string;
+  /** Short title summarizing the grievance. */
+  title: string;
+  /** Detailed grievance description provided by the user. */
+  description: string;
+  /** Category assigned to the grievance. */
+  category: string;
+  /** Geolocation associated with the grievance. */
+  location: ILocation;
+  /** Identifier of the citizen/user who filed the grievance. */
+  userId: string;
+  /** Department identifier responsible for resolving the issue. */
+  departmentId: string;
+  /** Priority label derived from the calculated score. */
+  priority: Priority;
+  /** Numeric score used to determine grievance urgency. */
+  priorityScore: number;
+  /** Current grievance lifecycle status. */
+  status: 'OPEN' | 'ASSIGNED' | 'IN_PROGRESS' | 'RESOLVED' | 'CLOSED';
+  /** Chronological status transition history. */
+  statusHistory: IGrievanceStatusHistory[];
+  /** Optional list of evidence media URLs. */
+  mediaUrls?: string[];
+  /** Optional Superplane execution run identifier. */
+  superplaneRunId?: string;
+  /** Optional duplicate detection flag. */
+  isDuplicate?: boolean;
+  /** Optional ticket identifier of the original grievance. */
+  duplicateOf?: string;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- CivicPulse -------------------------------------------------
+
+export interface IFactCheck {
+  /** Fact-check verdict result. */
+  verdict: 'TRUE' | 'FALSE' | 'MISLEADING' | 'UNVERIFIABLE';
+  /** Explanation supporting the verdict. */
+  explanation: string;
+  /** Confidence score for the fact-check output. */
+  confidence: number;
+  /** Source links used to support the verdict. */
+  sources: string[];
+  /** Timestamp when fact-checking was completed. */
+  checkedAt: Date;
+}
+
+export interface ISocialPost {
+  /** Optional unique identifier for the social post record. */
+  _id?: string;
+  /** Raw post text content. */
+  text: string;
+  /** Identifier of the post author. */
+  authorId: string;
+  /** Optional geolocation attached to the post. */
+  location?: ILocation;
+  /** Optional category assigned to the post. */
+  category?: string;
+  /** Sentiment score generated by analysis pipeline. */
+  sentimentScore: number;
+  /** Urgency score used for civic escalation logic. */
+  urgencyScore: number;
+  /** Optional fact-check payload for this post. */
+  factCheck?: IFactCheck;
+  /** Optional cluster identifier for crisis grouping. */
+  crisisClusterId?: string;
+  /** Community vote count associated with the post. */
+  voteCount: number;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- GigForge ---------------------------------------------------
+
+export interface IWorkerProfile {
+  /** Optional unique identifier for the worker profile. */
+  _id?: string;
+  /** Identifier of the user owning this profile. */
+  userId: string;
+  /** Public display name of the worker. */
+  name: string;
+  /** List of worker skills used for matching. */
+  skills: string[];
+  /** Primary location of the worker. */
+  location: ILocation;
+  /** Optional biography or profile summary text. */
+  bio?: string;
+  /** Aggregate rating score for the worker. */
+  rating: number;
+  /** Number of gigs successfully completed. */
+  completedGigs: number;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+export interface IGigListing {
+  /** Optional unique identifier for the gig listing. */
+  _id?: string;
+  /** Short title for the gig listing. */
+  title: string;
+  /** Detailed gig description and requirements. */
+  description: string;
+  /** Skill requirements for applicants. */
+  requiredSkills: string[];
+  /** Location where the gig is expected to be performed. */
+  location: ILocation;
+  /** Total budget allocated to the gig. */
+  budget: number;
+  /** Identifier of the employer posting the gig. */
+  employerId: string;
+  /** Fraud risk score assigned by moderation logic. */
+  fraudScore: number;
+  /** Optional fraud flags raised by moderation checks. */
+  fraudFlags?: string[];
+  /** Current lifecycle status of the listing. */
+  status: 'PENDING_REVIEW' | 'ACTIVE' | 'FILLED' | 'REJECTED';
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- NearGive ---------------------------------------------------
+
+export interface IDonation {
+  /** Optional unique identifier for the donation record. */
+  _id?: string;
+  /** Identifier of the donor user. */
+  donorId: string;
+  /** Human-readable donated item name. */
+  itemName: string;
+  /** Donation category used for NGO matching. */
+  category: string;
+  /** Detailed item description for recipients and reviewers. */
+  description: string;
+  /** Donation pickup or dropoff location. */
+  location: ILocation;
+  /** Photos of the donated item. */
+  photoUrls: string[];
+  /** Quality assessment score assigned to the item. */
+  qualityScore: number;
+  /** Whether the donation passed quality acceptance criteria. */
+  qualityAccepted: boolean;
+  /** Optional matched NGO identifier. */
+  matchedNgoId?: string;
+  /** Current donation lifecycle status. */
+  status: 'PENDING' | 'QUALITY_CHECK' | 'MATCHED' | 'COLLECTED' | 'DELIVERED' | 'REJECTED';
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+export interface INGOProfile {
+  /** Optional unique identifier for the NGO profile. */
+  _id?: string;
+  /** Official NGO name. */
+  name: string;
+  /** Primary operating location of the NGO. */
+  location: ILocation;
+  /** Donation categories this NGO can accept. */
+  acceptedCategories: string[];
+  /** Maximum intake capacity for active items. */
+  maxCapacity: number;
+  /** Current active load against capacity. */
+  currentLoad: number;
+  /** Aggregate rating for trust and quality. */
+  rating: number;
+  /** Whether the NGO has been verified by admins. */
+  verified: boolean;
+  /** Main contact email for the NGO. */
+  contactEmail: string;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- TerraScan --------------------------------------------------
+
+export interface IEnvironmentalAlert {
+  /** Optional unique identifier for the alert record. */
+  _id?: string;
+  /** Region geometry polygon for impacted area. */
+  regionPolygon: object;
+  /** Optional human-readable region name. */
+  regionName?: string;
+  /** Optional normalized vegetation index value. */
+  ndviScore?: number;
+  /** Optional land surface temperature in Celsius. */
+  lstCelsius?: number;
+  /** Optional flood extent percentage estimate. */
+  floodExtentPercent?: number;
+  /** Optional count of detected fire hotspots. */
+  fireHotspots?: number;
+  /** Optional proxy score for air quality. */
+  aqiProxy?: number;
+  /** Aggregated severity level across signals. */
+  overallSeverity: Severity;
+  /** Generated Gemini summary report for the alert. */
+  geminiReport: string;
+  /** List of likely root causes for the alert. */
+  probableCauses: string[];
+  /** Suggested response actions for operators. */
+  recommendedActions: string[];
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- SentinelAI -------------------------------------------------
+
+export interface ICrimePrediction {
+  /** Optional unique identifier for the prediction record. */
+  _id?: string;
+  /** S2 cell identifier for spatial prediction bucket. */
+  s2CellId: string;
+  /** Representative location for the prediction. */
+  location: ILocation;
+  /** Predicted risk score for the specified context. */
+  riskScore: number;
+  /** Time slot represented by this prediction. */
+  timeSlot: string;
+  /** Model reasoning text supporting the prediction. */
+  reasoning: string;
+  /** Indicates whether dispatch automation was triggered. */
+  dispatchTriggered: boolean;
+  /** Optional dispatch run identifier. */
+  dispatchRunId?: string;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- VoiceAssembly ----------------------------------------------
+
+export interface ITownHallIssue {
+  /** Optional unique identifier for the issue record. */
+  _id?: string;
+  /** Issue text submitted by participant. */
+  text: string;
+  /** Identifier of participant who authored the issue. */
+  authorId: string;
+  /** Number of votes received by the issue. */
+  voteCount: number;
+  /** Current issue status in the town hall workflow. */
+  status: 'OPEN' | 'RESOLVED';
+}
+
+export interface ITownHallSession {
+  /** Optional unique identifier for the session record. */
+  _id?: string;
+  /** Public title of the town hall session. */
+  title: string;
+  /** Administrator identifier who created the session. */
+  adminId: string;
+  /** Current lifecycle status of the town hall session. */
+  status: 'UPCOMING' | 'ACTIVE' | 'CLOSED';
+  /** Scheduled date and time for session start. */
+  scheduledAt: Date;
+  /** Optional SpacetimeDB room identifier used for realtime sync. */
+  spacetimeRoomId?: string;
+  /** List of issues proposed and tracked during the session. */
+  issues: ITownHallIssue[];
+  /** Number of active or total participants in the session. */
+  participantCount: number;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- LedgerCivic ------------------------------------------------
+
+export interface IExpenditureEntry {
+  /** Optional unique identifier for the expenditure entry. */
+  _id?: string;
+  /** Identifier of the officer submitting the record. */
+  officerId: string;
+  /** Department responsible for the expenditure. */
+  department: string;
+  /** Budget category associated with the expense. */
+  category: string;
+  /** Monetary amount for the expenditure entry. */
+  amount: number;
+  /** Human-readable description of the expenditure. */
+  description: string;
+  /** Solana transaction signature for on-chain reference. */
+  solanaSignature: string;
+  /** Explorer URL to inspect the transaction. */
+  explorerUrl: string;
+  /** Whether the signature was generated in mock mode. */
+  isMockSignature: boolean;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- MeshAlert --------------------------------------------------
+
+export interface IMeshNode {
+  /** Optional unique identifier for the mesh node record. */
+  _id?: string;
+  /** Device identifier of the mesh-capable node. */
+  deviceId: string;
+  /** Geolocation of the mesh node. */
+  location: ILocation;
+  /** Optional battery percentage or normalized battery score. */
+  batteryLevel?: number;
+  /** Supported mesh communication capabilities. */
+  meshCapabilities: string[];
+  /** Timestamp of the most recent heartbeat from the node. */
+  lastSeen: Date;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+export interface IRescueEvent {
+  /** Optional unique identifier for the rescue event record. */
+  _id?: string;
+  /** Geolocation where rescue event is centered. */
+  location: ILocation;
+  /** Rescue event type label. */
+  type: string;
+  /** Optional additional incident description. */
+  description?: string;
+  /** Identifier of the reporting actor or system. */
+  reportedBy: string;
+  /** Mesh node identifiers involved in the response. */
+  meshNodes: string[];
+  /** Current response status of the rescue event. */
+  status: 'ACTIVE' | 'CONTAINED' | 'RESOLVED';
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- AuraAssist -------------------------------------------------
+
+export interface IAIAuditLog {
+  /** Optional unique identifier for the AI audit log record. */
+  _id?: string;
+  /** Identifier of the user that initiated the request. */
+  userId: string;
+  /** Raw user query text captured for auditing. */
+  query: string;
+  /** Action requested or executed by the assistant. */
+  action: string;
+  /** Module context where the action occurred. */
+  module: string;
+  /** Role context used for authorization decisions. */
+  role: string;
+  /** Whether the action was allowed by policy checks. */
+  allowed: boolean;
+  /** Optional policy reason for blocking the request. */
+  blockReason?: string;
+  /** Optional model or policy reasoning detail. */
+  reason?: string;
+  /** Optional timestamp when the record was created. */
+  createdAt?: Date;
+}
+
+// --- Common API response wrappers -------------------------------
+
+export interface IApiSuccess<T> {
+  /** Indicates a successful API operation. */
+  success: true;
+  /** Human-readable success message. */
+  message: string;
+  /** Response payload containing successful data. */
+  data: T;
+}
+
+export interface IApiError {
+  /** Indicates a failed API operation. */
+  success: false;
+  /** Human-readable error summary. */
+  error: string;
+  /** Numeric error code representing failure type. */
+  code: number;
+}
+
+export interface IApiPaginated<T> extends IApiSuccess<T[]> {
+  /** Pagination metadata for list responses. */
+  pagination: IPagination;
+}
