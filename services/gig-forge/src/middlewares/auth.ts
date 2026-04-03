@@ -72,6 +72,8 @@ export function authenticate(req: Request, res: Response, next: NextFunction): v
   }
 }
 
+export const requireAuth = authenticate;
+
 /**
  * Optionally attach req.user when a valid JWT is provided.
  * Usage: app.get('/feed', optionalAuth, handler)

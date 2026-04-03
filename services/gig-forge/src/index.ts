@@ -39,7 +39,8 @@ app.use(errorHandler);
 // Database Connection & Server Start
 const startServer = async () => {
   try {
-    await connectDB();
+    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/nexus-civic';
+    await connectDB(uri);
     console.log('Connected to MongoDB via @nexus-civic/db');
     
     app.listen(port, () => {

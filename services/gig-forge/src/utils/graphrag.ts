@@ -25,8 +25,8 @@ export const matchWorkerToGigs = async (workerId: string) => {
   const directSkills = worker.skills || [];
   const expandedSkills = getAdjacentSkills(directSkills);
   
-  const directSkillsSet = new Set(directSkills.map(s => s.toLowerCase()));
-  const expandedSkillsSet = new Set(expandedSkills.map(s => s.toLowerCase()));
+  const directSkillsSet = new Set(directSkills.map((s: string) => s.toLowerCase()));
+  const expandedSkillsSet = new Set(expandedSkills.map((s: string) => s.toLowerCase()));
 
   // Active listings
   const listings = await GigListing.find({ status: 'ACTIVE' });

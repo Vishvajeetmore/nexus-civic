@@ -14,17 +14,15 @@ import { validate } from '../middleware/validate';
 const router = Router();
 
 const querySchema = z.object({
-  query: z.string().min(1),
-  intendedAction: z.string().min(1).optional(),
-  targetModule: z.string().min(1).optional(),
+  text: z.string().min(1).optional(),
+  audioBase64: z.string().min(1).optional(),
+  voiceMode: z.boolean().optional(),
+}).refine((data) => Boolean(data.text || data.audioBase64), {
+  message: 'Please provide text or audioBase64',
 });
 
 const voiceSchema = z.object({
-  transcript: z.string().min(1).optional(),
-  audioUrl: z.string().url().optional(),
-  language: z.string().min(2).optional(),
-}).refine((data) => Boolean(data.transcript || data.audioUrl), {
-  message: 'Either transcript or audioUrl is required',
+  audioBase64: z.string().min(1),
 });
 
 // POST /api/query (authenticate)

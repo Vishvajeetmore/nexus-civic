@@ -2,9 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 
-import { createLogger } from '../utils/logger';
-
-const logger = createLogger(process.env.SERVICE_NAME ?? 'service-template');
+// Simple console fallback logger since logger.ts is missing
 
 /**
  * Global Express error middleware.
@@ -32,7 +30,7 @@ export function errorHandler(
     message = err.message || message;
   }
 
-  logger.error('Request failed', {
+  console.error('Request failed', {
     statusCode,
     message,
     method: req.method,
