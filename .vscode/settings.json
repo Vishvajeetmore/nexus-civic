@@ -1,0 +1,4 @@
+{
+  "css.lint.unknownAtRules": "ignore",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": false
+}
