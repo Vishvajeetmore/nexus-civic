@@ -62,7 +62,7 @@ export default function CitizenHub() {
               </div>
             </Link>
 
-            <Link href="/dashboard" className="bg-slate-800 border border-slate-700 p-6 rounded-3xl flex flex-col items-center justify-center text-center gap-3 shadow-sm hover:bg-slate-700 hover:shadow-md transition-all active:scale-95 text-white">
+            <Link href="/login" className="bg-slate-800 border border-slate-700 p-6 rounded-3xl flex flex-col items-center justify-center text-center gap-3 shadow-sm hover:bg-slate-700 hover:shadow-md transition-all active:scale-95 text-white">
               <div className="bg-slate-700 p-4 rounded-2xl text-indigo-300">
                 <ShieldAlert className="w-8 h-8" />
               </div>
